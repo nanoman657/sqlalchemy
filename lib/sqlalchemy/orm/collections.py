@@ -1025,7 +1025,7 @@ def _instrument_membership_mutator(method, before, argument, after):
     return wrapper
 
 
-def __set_wo_mutation(collection: CollectionAdapter, item: Callable[[_FN], _FN], _sa_initiator: bool = False) -> None:
+def __set_wo_mutation(collection: _AdaptedCollectionProtocol, item: Callable[[_FN], _FN], _sa_initiator: bool = False) -> None:
     """Run set wo mutation events.
 
     The collection is not mutated.
