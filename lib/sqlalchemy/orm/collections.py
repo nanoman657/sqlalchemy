@@ -1025,7 +1025,7 @@ def _instrument_membership_mutator(method, before, argument, after):
     return wrapper
 
 
-def __set_wo_mutation(collection, item, _sa_initiator=None):
+def __set_wo_mutation(collection: _AdaptedCollectionProtocol, item: Callable[[_FN], _FN], _sa_initiator: bool = False) -> None:
     """Run set wo mutation events.
 
     The collection is not mutated.
@@ -1284,7 +1284,7 @@ def _dict_decorators() -> Dict[str, Callable[[_FN], _FN]]:
             else:
                 value = self.__getitem__(key)
                 if value is default:
-                    __set_wo_mutation(self, value, None)
+                    __set_wo_mutation(self, value, False)
 
                 return value
 
@@ -1299,18 +1299,18 @@ def _dict_decorators() -> Dict[str, Callable[[_FN], _FN]]:
                         if key not in self or self[key] is not __other[key]:
                             self[key] = __other[key]
                         else:
-                            __set_wo_mutation(self, __other[key], None)
+                            __set_wo_mutation(self, __other[key], False)
                 else:
                     for key, value in __other:
                         if key not in self or self[key] is not value:
                             self[key] = value
                         else:
-                            __set_wo_mutation(self, value, None)
+                            __set_wo_mutation(self, value, False)
             for key in kw:
                 if key not in self or self[key] is not kw[key]:
                     self[key] = kw[key]
                 else:
-                    __set_wo_mutation(self, kw[key], None)
+                    __set_wo_mutation(self, kw[key], False)
 
         _tidy(update)
         return update
@@ -1345,7 +1345,7 @@ def _set_decorators() -> Dict[str, Callable[[_FN], _FN]]:
         fn.__doc__ = getattr(set, fn.__name__).__doc__
 
     def add(fn):
-        def add(self, value, _sa_initiator=None):
+        def add(self, value, _sa_initiator):
             if value not in self:
                 value = __set(self, value, _sa_initiator, NO_KEY)
             else:
