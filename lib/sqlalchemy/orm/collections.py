@@ -1345,7 +1345,7 @@ def _set_decorators() -> Dict[str, Callable[[_FN], _FN]]:
         fn.__doc__ = getattr(set, fn.__name__).__doc__
 
     def add(fn):
-        def add(self, value, _sa_initiator: bool = False):
+        def add(self, value, _sa_initiator):
             if value not in self:
                 value = __set(self, value, _sa_initiator, NO_KEY)
             else:
